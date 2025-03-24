@@ -34,7 +34,7 @@ class HttpRequest{
     
             ajax.onerror = event =>{
 
-                reject(e);
+                reject();
             };
 
             ajax.onload = event =>{
@@ -54,7 +54,8 @@ class HttpRequest{
 
             };
     
-            ajax.send();
+            ajax.setRequestHeader('Content-Type', 'application/json');
+            ajax.send(JSON.stringify(params));
 
         });
 

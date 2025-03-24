@@ -47,21 +47,24 @@ class UserController {
                         result._photo = content;
                     }
 
-                    let user = new user();
+                    let user = new User();
 
                     user.loadFromJSON(result);
 
-                    user.save();
+                    user.save().then(user=>{
 
-                    this.getTr(user, tr);
 
-                    this.updateCount();
+                        this.getTr(user, tr);
 
-                    this.formUpdateEl.reset();
+                        this.updateCount();
+    
+                        this.formUpdateEl.reset();
+    
+                        btn.disabled = false;
+    
+                        this.showPanelCreate();
+                    });
 
-                    btn.disabled = false;
-
-                    this.showPanelCreate();
 
                 },
                 (e) => {
@@ -92,13 +95,17 @@ class UserController {
                     
                     values.photo = content;
 
-                    values.save();
+                    values.save().then(user =>{
 
-                    this.addLine(values);
+                        this.addLine(user);
 
-                    this.formEl.reset();
+                        this.formEl.reset();
+    
+                        btn.disabled = false;
 
-                    btn.disabled = false;
+                    });
+
+                  
 
                 }, 
                 (e) => {
@@ -184,7 +191,7 @@ class UserController {
             return false;
         }
 
-        return new user(
+        return new User(
             user.name,
             user.gender,
             user.birth,
@@ -199,8 +206,10 @@ class UserController {
 
     selectAll(){
 
+
+        User.getUsersStorage().then()
         
-        HttpRequest.get('/users').then(data=>{
+        User.getUsersStorage().then(data=>{
 
             data.users.forEach(dataUser=>{
 
@@ -257,15 +266,19 @@ class UserController {
 
             if (confirm("Deseja realmente excluir?")) {
 
-                let user = new user();
+                let user = new User();
 
                 user.loadFromJSON(JSON.parse(tr.dataset.user));
 
-                user.remove();
+                user.remove().then(data=>{
 
-                tr.remove();
+                    tr.remove();
 
-                this.updateCount();
+                    this.updateCount();
+
+                });
+
+         
 
             }
 
